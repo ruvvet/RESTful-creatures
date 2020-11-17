@@ -1,0 +1,22 @@
+<h1><%= title %></h1>
+<form method="POST" action="/dinosaurs/<%= index %>/?_method=PUT">
+    <label for="dinosaurName">Name</label>
+    <input id="dinosaurName" type="text" name="name" value="<%= dino.name %>">
+    <label for="dinosaurType">Type</label>
+    <input id="dinosaurType" type="text" name="type" value="<%= dino.type %>">
+    <input type="submit">
+  </form>
+
+
+
+
+     <!-- 1. user sends req to see the edit page
+    1.1 the req sends the index as a params
+2. edit page is rendered with appropriate index due to params
+3. after submitting, it calls the PUT route from the controller
+ >>>>>>>"localhost:XXXX/dinosaurs/:index/?_method=PUT"<<<<<
+4. then the index is used to parse the json file, find the right object
+5. edit/update object
+6. rewrite json file
+7. where is it getting index from?
+ -->

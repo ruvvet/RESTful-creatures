@@ -28,6 +28,24 @@ cryptidRouter.post('/', (req, res) => {
   res.redirect('/cryptids');
 });
 
+
+cryptidRouter.get('/search/:searchTerm', (req, res)=>{
+    let cryptids = JSON.parse(fs.readFileSync('./cryptids.json'));
+    const searchCrypto = req.params.searchTerm.toLowerCase();
+
+    let cryptosearchIndex;
+    cryptids.forEach(cryptid => {
+      if (cryptid.name.split(' ').join('').toLowerCase() == searchCrypto) {
+        cryptosearchIndex = cryptids.indexOf(cryptid);
+      }
+    })
+    const title = `search cryptid ${searchCrypto} which is at index: ${cryptosearchIndex}`;
+    res.render('cryptids/show', { title, cryptid: cryptids[cryptosearchIndex] });
+  });
+
+
+
+
 // show only one dino at an index
 cryptidRouter.get('/:index', (req, res) => {
   let cryptids = JSON.parse(fs.readFileSync('./cryptids.json'));
