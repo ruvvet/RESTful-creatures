@@ -1,0 +1,9 @@
+<%= title %>
+<ul>
+  <% cryptids.forEach(monster => { %>
+  <li>
+    Name: <%= monster.name %><br />
+    Image: <img src="<%= monster.img_url %>">
+  </li>
+  <% }); %>
+</ul>
