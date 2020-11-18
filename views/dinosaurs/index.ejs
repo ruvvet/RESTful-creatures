@@ -1,9 +1,28 @@
 <h1><%= title %></h1>
+
+<form method="GET" action="/dinosaurs/new">
+  <button type="submit">New</button>
+</form>
 <ul>
   <% dinosaurs.forEach(dino => { %>
   <li>
     Dino Name: <%= dino.name %><br />
-    Type: <%= dino.type %>
+    Type: <%= dino.type %><br />
+    <a href = "/dinosaurs/edit/<%= dinosaurs.indexOf(dino) %>">EDIT</a>
+    <form method="GET" action="/dinosaurs/edit/<%= dinosaurs.indexOf(dino) %>">
+      <button type="submit">Edit</button>
+    </form>
+    <form
+      method="POST"
+      action="/dinosaurs/<%= dinosaurs.indexOf(dino) %>/?_method=DELETE"
+    >
+      <input type="submit" value="Delete" />
+    </form>
   </li>
   <% }); %>
 </ul>
+
+<!--
+  every GET request should have a page that can be rendered
+  every other request does not
+ -->

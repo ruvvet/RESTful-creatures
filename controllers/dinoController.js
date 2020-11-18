@@ -1,4 +1,11 @@
+// dinorouter is isolated in this file
+// has no knowledge of other express settings
+//
 const dinoRouter = require('express').Router();
+
+
+
+
 // lets us read/parse json files
 const fs = require('fs');
 
@@ -11,6 +18,10 @@ const fs = require('fs');
 
 
 
+// if data is static, make it global
+// if data changes, need to re-load the data w/ each route
+// >>> can implement cacheing > after an update, update the global
+//
 
 
 
@@ -22,7 +33,7 @@ const fs = require('fs');
 dinoRouter.get('/', (req, res) => {
   console.log('---GET---');
   let dinosaurs = JSON.parse(fs.readFileSync('./dinosaurs.json'));
-  res.render('dinosaurs/index', { title: 'all dinos', dinosaurs });
+  res.render('dinosaurs/index', { title: 'all dinos', dinosaurs});
 });
 
 
@@ -43,19 +54,25 @@ dinoRouter.get('/new', (req, res) => {
 });
 
 // then get the data from form and post it
-dinoRouter.post('/', (req, res) => {
+dinoRouter.post('/new', (req, res) => {
   console.log('---POST (to make new)---');
   let dinosaurs = JSON.parse(fs.readFileSync('./dinosaurs.json'));
   let newDino = req.body;
   dinosaurs.push(newDino);
   fs.writeFileSync('./dinosaurs.json', JSON.stringify(dinosaurs));
-  res.redirect('/dinosaurs');
+  res.redirect('/dinosaurs'); // if you don't redirect and you refresh, it submits again
 });
 
 
+// form action (url of the request) == the post "route"
+// POST executes w/out redirecting
+// executes a post request
+// puts form inputs into a body
+// as an object of {key:value pairs}
 
-
-
+// GET >> redirects
+// GET has no body
+// so a form gives a query
 
 
 
@@ -83,20 +100,20 @@ dinoRouter.get('/search/:searchTerm', (req, res) => {
 // use query string
 dinoRouter.get('/search', (req, res) => {
   console.log('---GET (search w/ query)---', req.query);
-  let dinosaurs = JSON.parse(fs.readFileSync('./dinosaurs.json'));
-  let queryDinoName = req.query.name;
-  let queryDinoType = req.query.type;
+  const dinosaurs = JSON.parse(fs.readFileSync('./dinosaurs.json'));
+  const queryDinoName = req.query.name;
+  const queryDinoType = req.query.type;
 
   let dinoQuery = dinosaurs.filter((dino) => {
-    dino.name.toLowerCase == queryDinoName;
+    return dino.name.toLowerCase() == queryDinoName;
   });
+
+  console.log(dinoQuery)
 
   const title = `query dino ${queryDinoName}`;
   res.render('dinosaurs/index', { title, dinosaurs: dinoQuery });
 });
 /////////////////////////////////////////////////////
-
-
 
 
 
@@ -111,16 +128,6 @@ dinoRouter.get('/delete', (req, res) => {
   res.render('dinosaurs/delete', {title: 'delete a dino', dinosaurs});
 });
 
-/////////???????????????????????? THIS ONE DOESNT WORK?????????
-// dinoRouter.delete('/delete/:index', (req, res) => {
-//   let dinosaurs = JSON.parse(fs.readFileSync('./dinosaurs.json'));
-//   let index = parseInt(req.params.index);
-//   dinosaurs.splice(index, 1);
-
-//   fs.writeFileSync('./dinosaurs.json', JSON.stringify(dinosaurs));
-//   res.redirect('/dinosaurs');
-
-// });
 
 dinoRouter.delete('/:index', (req, res) => {
   console.log('---DELETE (for del)---', req.params);

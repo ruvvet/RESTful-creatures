@@ -1,7 +1,7 @@
 // required modules/lib
 const express = require('express');
 const layouts = require('express-ejs-layouts');
-const fs = require('fs'); // lets us read/parse json files
+
 const path = require('path');// for path
 const methodOverride = require('method-override');
 
@@ -13,14 +13,11 @@ const cryptidRouter = require('./controllers/cryptidController');
 // create app
 const app = express();
 
-/////////////////////////////////////////////////////
-//const app = require('express')(); //??????????????
-
 //set up middleware
 // these are all middleware
 app.set('view engine', 'ejs');
 app.use(methodOverride('_method'));  // use override middleware
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({extended: false})); // makes sure the url params/query is parseable
 app.use(layouts);
 app.use('/', express.static(path.join(__dirname, 'public')));
 
@@ -44,7 +41,6 @@ app.listen(4000, () => {});
 
 
 // QUETIONS
-// using const app = require('express')(); //?????????????? - it works fine for me w/out it
 // continuously re-parsing the json file for each route
 // query string search
 // how to troubleshoot
